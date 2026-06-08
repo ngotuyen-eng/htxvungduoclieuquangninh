@@ -3,6 +3,43 @@
    HTX Vùng Dược Liệu Quảng Ninh
    ================================================================ */
 
+/* ---- INLINE SEARCH BAR (mobile-first) ---- */
+.inline-search-wrap {
+  padding: 0 0 16px 0;
+}
+.inline-search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: #fff; border: 2px solid #c8ddb2; border-radius: 50px;
+  padding: 10px 16px;
+  box-shadow: 0 2px 12px rgba(45,80,22,0.1);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.inline-search-bar:focus-within {
+  border-color: #2d5016; box-shadow: 0 4px 20px rgba(45,80,22,0.18);
+}
+.inline-search-icon { font-size: 1.1rem; flex-shrink: 0; opacity: 0.6; }
+.inline-search-input {
+  flex: 1; border: none; outline: none; background: transparent;
+  font-size: 1rem; font-family: inherit; color: #1a202c;
+  min-width: 0;
+}
+.inline-search-input::placeholder { color: #a0b080; }
+.inline-search-clear {
+  background: none; border: none; cursor: pointer;
+  font-size: 0.875rem; color: #888; padding: 2px 6px;
+  border-radius: 50%; transition: background 0.15s;
+  flex-shrink: 0;
+}
+.inline-search-clear:hover { background: #f0f0f0; }
+
+/* Search hint text */
+.search-hint {
+  text-align: center; font-size: 0.8rem; color: #888;
+  padding: 8px 0 0; margin: 0;
+}
+.search-hint strong { color: #2d5016; }
+
+
 /* ---- DELIVERY FORM - Form thông tin giao hàng ---- */
 .delivery-form {
   margin-top: 16px;

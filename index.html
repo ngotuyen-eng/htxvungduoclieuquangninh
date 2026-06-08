@@ -118,7 +118,22 @@
       <!-- Section header -->
       <div class="section-header">
         <h2 class="section-title-main">🌿 Sản phẩm của chúng tôi</h2>
-        <p class="section-subtitle">Chọn danh mục hoặc tìm kiếm sản phẩm bạn cần</p>
+      </div>
+
+      <!-- INLINE SEARCH BAR (luôn hiện, kể cả mobile) -->
+      <div class="inline-search-wrap">
+        <div class="inline-search-bar">
+          <span class="inline-search-icon">🔍</span>
+          <input
+            type="search"
+            id="inline-search-input"
+            class="inline-search-input"
+            placeholder="Tìm dược liệu... (có thể viết không dấu)"
+            autocomplete="off"
+            enterkeyhint="search"
+          />
+          <button class="inline-search-clear" id="inline-search-clear" style="display:none">✕</button>
+        </div>
       </div>
 
       <!-- Categories bar -->
