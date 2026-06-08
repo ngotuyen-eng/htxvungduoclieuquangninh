@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Trị - HTX Vùng Dược Liệu Quảng Ninh</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/admin.css" />
+</head>
+<body class="admin-page">
+
+  <!-- ====== LOGIN SCREEN ====== -->
+  <div class="admin-login-overlay" id="login-overlay">
+    <div class="admin-login">
+      <div class="login-logo">🌿</div>
+      <h1 class="login-title">HTX Vùng Dược Liệu<br>Quảng Ninh</h1>
+      <p class="login-sub">Trang quản trị - dành cho chủ shop</p>
+      <form id="login-form" onsubmit="return false;">
+        <div class="form-group">
+          <label for="login-password">Mật khẩu</label>
+          <input type="password" id="login-password" class="form-control" placeholder="Nhập mật khẩu..." autocomplete="current-password" />
+        </div>
+        <div class="login-error" id="login-error" style="display:none">Mật khẩu không đúng!</div>
+        <button type="submit" class="btn-primary" id="login-btn" style="width:100%">Đăng nhập</button>
+      </form>
+      <a href="index.html" class="login-back">← Về trang khách hàng</a>
+    </div>
+  </div>
+
+  <!-- ====== ADMIN LAYOUT ====== -->
+  <div class="admin-layout" id="admin-layout" style="display:none">
+
+    <!-- Sidebar -->
+    <aside class="admin-sidebar" id="admin-sidebar">
+      <div class="sidebar-brand">
+        <span>🌿</span>
+        <span>Quản Trị</span>
+      </div>
+      <nav class="sidebar-nav">
+        <button class="sidebar-item active" data-tab="products" id="nav-products">
+          <span class="sidebar-icon">🛍️</span> Sản phẩm
+        </button>
+        <button class="sidebar-item" data-tab="categories" id="nav-categories">
+          <span class="sidebar-icon">📂</span> Danh mục
+        </button>
+        <button class="sidebar-item" data-tab="settings" id="nav-settings">
+          <span class="sidebar-icon">⚙️</span> Cài đặt shop
+        </button>
+        <button class="sidebar-item" data-tab="backup" id="nav-backup">
+          <span class="sidebar-icon">💾</span> Sao lưu
+        </button>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html" class="sidebar-view-site">🌐 Xem trang web</a>
+        <button class="sidebar-logout" id="logout-btn">Đăng xuất</button>
+      </div>
+    </aside>
+
+    <!-- Mobile header -->
+    <div class="admin-mobile-header">
+      <button class="sidebar-toggle" id="sidebar-toggle">☰</button>
+      <span class="admin-mobile-title">🌿 Quản Trị</span>
+      <a href="index.html" class="admin-view-site-btn">🌐</a>
+    </div>
+
+    <!-- Main content -->
+    <main class="admin-content" id="admin-content">
+
+      <!-- ===== TAB: SẢN PHẨM ===== -->
+      <section class="admin-tab" id="tab-products">
+        <div class="content-header">
+          <div>
+            <h2 class="content-title">Quản lý sản phẩm</h2>
+            <p class="content-sub" id="products-sub">Đang tải...</p>
+          </div>
+          <button class="btn-primary" id="btn-add-product">+ Thêm sản phẩm</button>
+        </div>
+
+        <!-- Search & filter -->
+        <div class="admin-toolbar">
+          <div class="search-bar admin-search">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="admin-search" placeholder="Tìm sản phẩm..." class="form-control" />
+          </div>
+          <select id="admin-cat-filter" class="form-control admin-filter-select">
+            <option value="all">Tất cả danh mục</option>
+          </select>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="admin-table" id="products-table">
+            <thead>
+              <tr>
+                <th style="width:60px">Ảnh</th>
+                <th>Tên sản phẩm</th>
+                <th>Danh mục</th>
+                <th>Giá</th>
+                <th>Đơn vị</th>
+                <th style="width:120px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== TAB: DANH MỤC ===== -->
+      <section class="admin-tab" id="tab-categories" style="display:none">
+        <div class="content-header">
+          <div>
+            <h2 class="content-title">Quản lý danh mục</h2>
+            <p class="content-sub">Thêm, sửa, xóa danh mục sản phẩm</p>
+          </div>
+          <button class="btn-primary" id="btn-add-category">+ Thêm danh mục</button>
+        </div>
+        <div class="table-wrapper">
+          <table class="admin-table" id="categories-table">
+            <thead>
+              <tr>
+                <th>Tên danh mục</th>
+                <th>Mô tả</th>
+                <th>Số SP</th>
+                <th style="width:120px">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="categories-tbody"></tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===== TAB: CÀI ĐẶT ===== -->
+      <section class="admin-tab" id="tab-settings" style="display:none">
+        <div class="content-header">
+          <h2 class="content-title">Cài đặt thông tin shop</h2>
+        </div>
+        <form class="admin-form settings-form" id="settings-form" onsubmit="return false;">
+          <div class="form-group">
+            <label for="set-name">Tên shop</label>
+            <input type="text" id="set-name" class="form-control" placeholder="VD: HTX Vùng Dược Liệu Quảng Ninh" />
+          </div>
+          <div class="form-group">
+            <label for="set-phone">Số điện thoại</label>
+            <input type="tel" id="set-phone" class="form-control" placeholder="VD: 0912 345 678" />
+          </div>
+          <div class="form-group">
+            <label for="set-address">Địa chỉ</label>
+            <input type="text" id="set-address" class="form-control" placeholder="VD: Quảng Ninh" />
+          </div>
+          <div class="form-group">
+            <label for="set-desc">Mô tả shop</label>
+            <textarea id="set-desc" class="form-control" rows="3" placeholder="Mô tả ngắn về shop..."></textarea>
+          </div>
+          <div class="form-group">
+            <label for="set-facebook">Link Facebook Page</label>
+            <input type="url" id="set-facebook" class="form-control" placeholder="https://facebook.com/..." />
+          </div>
+          <div class="form-group">
+            <label for="set-messenger">Link Messenger</label>
+            <input type="url" id="set-messenger" class="form-control" placeholder="https://m.me/..." />
+            <small class="form-hint">Tìm ở trang Facebook Page của bạn → Nhắn tin → Copy link</small>
+          </div>
+          <div class="form-group">
+            <label for="set-zalo">Link Zalo (số điện thoại Zalo)</label>
+            <input type="text" id="set-zalo" class="form-control" placeholder="VD: https://zalo.me/0912345678" />
+          </div>
+          <hr class="form-divider" />
+          <div class="form-group">
+            <label for="set-password">Mật khẩu admin</label>
+            <input type="password" id="set-password" class="form-control" placeholder="Để trống nếu không đổi" />
+          </div>
+          <div class="form-group">
+            <label for="set-password-confirm">Xác nhận mật khẩu mới</label>
+            <input type="password" id="set-password-confirm" class="form-control" placeholder="Nhập lại mật khẩu mới" />
+          </div>
+          <button type="submit" class="btn-primary" id="btn-save-settings">💾 Lưu thông tin</button>
+        </form>
+      </section>
+
+      <!-- ===== TAB: SAO LƯU ===== -->
+      <section class="admin-tab" id="tab-backup" style="display:none">
+        <div class="content-header">
+          <h2 class="content-title">Sao lưu & Khôi phục dữ liệu</h2>
+        </div>
+        <div class="backup-cards">
+          <div class="backup-card">
+            <div class="backup-icon">📤</div>
+            <h3>Xuất dữ liệu</h3>
+            <p>Tải xuống toàn bộ sản phẩm, danh mục và thông tin shop dưới dạng file JSON để sao lưu.</p>
+            <button class="btn-primary" id="btn-export">Xuất dữ liệu (JSON)</button>
+          </div>
+          <div class="backup-card">
+            <div class="backup-icon">📥</div>
+            <h3>Nhập dữ liệu</h3>
+            <p>Khôi phục dữ liệu từ file JSON đã xuất trước đó. <strong>Lưu ý: sẽ ghi đè dữ liệu hiện tại!</strong></p>
+            <label class="btn-secondary import-label" for="import-file">Chọn file JSON</label>
+            <input type="file" id="import-file" accept=".json" style="display:none" />
+            <div id="import-preview" style="display:none" class="import-preview">
+              <p id="import-info"></p>
+              <button class="btn-danger" id="btn-import-confirm">⚠️ Xác nhận nhập dữ liệu</button>
+            </div>
+          </div>
+          <div class="backup-card backup-card-danger">
+            <div class="backup-icon">🔄</div>
+            <h3>Reset về mặc định</h3>
+            <p>Xóa toàn bộ dữ liệu và khôi phục về 114 sản phẩm mặc định ban đầu.</p>
+            <button class="btn-danger" id="btn-reset">Reset dữ liệu</button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ====== MODAL THÊM/SỬA SẢN PHẨM ====== -->
+  <div class="modal-backdrop" id="product-form-backdrop" style="display:none"></div>
+  <div class="modal admin-modal" id="product-form-modal" style="display:none" role="dialog" aria-modal="true">
+    <div class="modal-header">
+      <h3 id="product-form-title">Thêm sản phẩm</h3>
+      <button class="modal-close" id="product-form-close">✕</button>
+    </div>
+    <form class="admin-form" id="product-form" onsubmit="return false;">
+      <input type="hidden" id="form-product-id" />
+      <div class="form-row">
+        <div class="form-group form-col-2">
+          <label for="form-name">Tên sản phẩm <span class="required">*</span></label>
+          <input type="text" id="form-name" class="form-control" placeholder="VD: Ba kích bóc lõi khô" required />
+        </div>
+        <div class="form-group form-col-1">
+          <label for="form-category">Danh mục</label>
+          <select id="form-category" class="form-control"></select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="form-price">Giá (VNĐ) <span class="required">*</span></label>
+          <input type="number" id="form-price" class="form-control" placeholder="VD: 300000" min="0" required />
+        </div>
+        <div class="form-group">
+          <label for="form-unit">Đơn vị <span class="required">*</span></label>
+          <input type="text" id="form-unit" class="form-control" placeholder="VD: 1 kg" required />
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="form-desc">Mô tả (tùy chọn)</label>
+        <textarea id="form-desc" class="form-control" rows="3" placeholder="Công dụng, đặc điểm sản phẩm..."></textarea>
+      </div>
+      <div class="form-group">
+        <label>Ảnh sản phẩm (tùy chọn)</label>
+        <div class="image-upload-area" id="image-upload-area">
+          <div class="image-preview-wrap" id="image-preview-wrap" style="display:none">
+            <img id="image-preview" src="" alt="Preview" />
+            <button type="button" class="image-remove-btn" id="image-remove-btn">✕ Xóa ảnh</button>
+          </div>
+          <div class="image-upload-placeholder" id="image-upload-placeholder">
+            <span class="upload-icon">📷</span>
+            <p>Nhấn để chọn ảnh</p>
+            <small>JPG, PNG, WEBP - tối đa 2MB</small>
+          </div>
+          <input type="file" id="form-image-file" accept="image/*" style="display:none" />
+          <input type="hidden" id="form-image" />
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="product-form-cancel">Hủy</button>
+        <button type="submit" class="btn-primary" id="product-form-save">💾 Lưu sản phẩm</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- ====== MODAL THÊM/SỬA DANH MỤC ====== -->
+  <div class="modal-backdrop" id="cat-form-backdrop" style="display:none"></div>
+  <div class="modal admin-modal" id="cat-form-modal" style="display:none" role="dialog">
+    <div class="modal-header">
+      <h3 id="cat-form-title">Thêm danh mục</h3>
+      <button class="modal-close" id="cat-form-close">✕</button>
+    </div>
+    <form class="admin-form" id="cat-form" onsubmit="return false;">
+      <input type="hidden" id="form-cat-id" />
+      <div class="form-group">
+        <label for="form-cat-name">Tên danh mục <span class="required">*</span></label>
+        <input type="text" id="form-cat-name" class="form-control" placeholder="VD: Dược liệu thô" required />
+      </div>
+      <div class="form-group">
+        <label for="form-cat-desc">Mô tả</label>
+        <input type="text" id="form-cat-desc" class="form-control" placeholder="Mô tả ngắn..." />
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="cat-form-cancel">Hủy</button>
+        <button type="submit" class="btn-primary" id="cat-form-save">💾 Lưu danh mục</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

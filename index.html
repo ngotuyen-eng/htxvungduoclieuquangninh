@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTX Vùng Dược Liệu Quảng Ninh - Dược Liệu Đông Y Chất Lượng Cao</title>
+  <meta name="description" content="HTX Vùng Dược Liệu Quảng Ninh - Chuyên cung cấp dược liệu đông y chất lượng cao tại Đông Triều, Quảng Ninh. SĐT: 0852563386" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <link rel="stylesheet" href="css/ui.css" />
+</head>
+<body>
+
+  <!-- ====== HEADER ====== -->
+  <header class="header" id="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo" id="logo-link">
+        <div class="logo-icon-wrap">🌿</div>
+        <div class="logo-text-wrap">
+          <span class="logo-name" id="shop-name-display">HTX Vùng Dược Liệu Quảng Ninh</span>
+          <span class="logo-tagline">Đông y chất lượng cao</span>
+        </div>
+      </a>
+
+      <div class="header-search">
+        <div class="search-bar">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Tìm dược liệu, thảo dược..." autocomplete="off" />
+          <button class="search-clear" id="search-clear" style="display:none">✕</button>
+        </div>
+      </div>
+
+      <div class="header-actions">
+        <a href="tel:0852563386" class="header-phone" id="header-phone-link">
+          <span class="phone-icon">📞</span>
+          <span class="phone-num" id="header-phone-num">0852 563 386</span>
+        </a>
+        <button class="btn-cart" id="cart-toggle" aria-label="Giỏ hàng">
+          🛒
+          <span class="badge" id="cart-badge" style="display:none">0</span>
+        </button>
+        <a href="admin.html" class="btn-admin-link" title="Quản trị">⚙️</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- ====== HERO ====== -->
+  <section class="hero" id="hero-section">
+    <div class="hero-bg-pattern"></div>
+    <div class="hero-overlay"></div>
+    <div class="container hero-content">
+      <div class="hero-badge">🌱 Thiên nhiên · Chất lượng · Uy tín</div>
+      <h1 class="hero-title" id="hero-shop-name">HTX Vùng Dược Liệu Quảng Ninh</h1>
+      <p class="hero-desc" id="hero-shop-desc">Chuyên cung cấp dược liệu đông y chất lượng cao — Cam kết sản phẩm sạch, nguồn gốc rõ ràng</p>
+
+      <div class="hero-info-row">
+        <div class="hero-info-item">
+          <span class="hi-icon">📍</span>
+          <span id="hero-address">31 Triều Hải, Trại Thông, Bình Khê, Đông Triều, Quảng Ninh</span>
+        </div>
+        <div class="hero-info-item">
+          <span class="hi-icon">📞</span>
+          <a href="tel:0852563386" id="hero-phone">0852 563 386</a>
+        </div>
+      </div>
+
+      <div class="hero-stats">
+        <div class="hero-stat">
+          <strong id="stat-products">114</strong>
+          <span>Sản phẩm</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <strong id="stat-categories">5</strong>
+          <span>Danh mục</span>
+        </div>
+        <div class="hero-stat-divider"></div>
+        <div class="hero-stat">
+          <strong>100%</strong>
+          <span>Tự nhiên</span>
+        </div>
+      </div>
+
+      <div class="hero-cta-row">
+        <button class="btn-cta-primary" onclick="document.getElementById('products-section').scrollIntoView({behavior:'smooth'})">
+          🌿 Xem sản phẩm
+        </button>
+        <a href="https://zalo.me/0852563386" target="_blank" class="btn-cta-zalo" id="hero-zalo-btn">
+          💬 Nhắn Zalo ngay
+        </a>
+      </div>
+    </div>
+
+    <!-- Decorative leaves -->
+    <div class="hero-deco hero-deco-1">🍃</div>
+    <div class="hero-deco hero-deco-2">🌿</div>
+  </section>
+
+  <!-- ====== TRUST BAR ====== -->
+  <div class="trust-bar">
+    <div class="container trust-bar-inner">
+      <div class="trust-item">✅ Dược liệu sạch, rõ nguồn gốc</div>
+      <div class="trust-sep">·</div>
+      <div class="trust-item">🚚 Giao hàng toàn quốc</div>
+      <div class="trust-sep">·</div>
+      <div class="trust-item">💯 Cam kết chất lượng</div>
+      <div class="trust-sep">·</div>
+      <div class="trust-item">📞 Tư vấn miễn phí</div>
+    </div>
+  </div>
+
+  <!-- ====== MAIN PRODUCTS ====== -->
+  <main id="products-section">
+    <div class="container">
+
+      <!-- Section header -->
+      <div class="section-header">
+        <h2 class="section-title-main">🌿 Sản phẩm của chúng tôi</h2>
+        <p class="section-subtitle">Chọn danh mục hoặc tìm kiếm sản phẩm bạn cần</p>
+      </div>
+
+      <!-- Categories bar -->
+      <div class="categories-bar" id="categories-bar">
+        <button class="category-pill active" data-cat="all" id="cat-all">🌿 Tất cả</button>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="products-toolbar">
+        <p class="products-count" id="products-count"></p>
+        <div class="sort-wrapper">
+          <label for="sort-select">Sắp xếp:</label>
+          <select id="sort-select" class="sort-select">
+            <option value="default">Mặc định</option>
+            <option value="name-asc">Tên A → Z</option>
+            <option value="name-desc">Tên Z → A</option>
+            <option value="price-asc">Giá thấp → cao</option>
+            <option value="price-desc">Giá cao → thấp</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Products grid -->
+      <div class="products-grid" id="products-grid"></div>
+
+      <!-- Empty state -->
+      <div class="empty-state" id="empty-state" style="display:none">
+        <div class="empty-icon">🔍</div>
+        <h3>Không tìm thấy sản phẩm</h3>
+        <p>Thử tìm kiếm với từ khóa khác hoặc chọn danh mục khác.</p>
+        <button class="btn-secondary" onclick="resetFilters()">Xem tất cả sản phẩm</button>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- ====== CONTACT SECTION ====== -->
+  <section class="contact-section" id="contact-section">
+    <div class="container">
+      <div class="contact-grid">
+        <!-- Left: Info -->
+        <div class="contact-info-col">
+          <div class="contact-logo">🌿</div>
+          <h2 class="contact-shop-name" id="contact-shop-name">HTX Vùng Dược Liệu Quảng Ninh</h2>
+          <p class="contact-desc" id="contact-desc">Chuyên cung cấp dược liệu đông y chất lượng cao — Cam kết sản phẩm sạch, nguồn gốc rõ ràng</p>
+
+          <div class="contact-details" id="contact-details">
+            <div class="contact-detail-item">
+              <span class="cd-icon">📞</span>
+              <div>
+                <div class="cd-label">Điện thoại / Zalo</div>
+                <a href="tel:0852563386" class="cd-value" id="detail-phone">0852 563 386</a>
+              </div>
+            </div>
+            <div class="contact-detail-item">
+              <span class="cd-icon">📍</span>
+              <div>
+                <div class="cd-label">Địa chỉ</div>
+                <div class="cd-value" id="detail-address">31 Triều Hải, Trại Thông, Bình Khê, Đông Triều, Quảng Ninh</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right: Buttons -->
+        <div class="contact-action-col">
+          <h3 class="contact-action-title">Đặt hàng hoặc hỏi giá</h3>
+          <p class="contact-action-sub">Chọn mặt hàng rồi nhắn cho chúng tôi — tư vấn miễn phí, trả lời nhanh!</p>
+
+          <div class="contact-buttons" id="contact-buttons">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="contact-note">
+            <p>💡 Mẹo: Thêm sản phẩm vào <strong>giỏ hàng 🛒</strong> rồi nhấn <strong>"Sao chép đơn hàng"</strong> để gửi danh sách nhanh hơn!</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER ====== -->
+  <footer class="footer" id="site-footer">
+    <div class="container footer-inner">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo-icon">🌿</span>
+          <div>
+            <div class="footer-shop-name" id="footer-shop-name">HTX Vùng Dược Liệu Quảng Ninh</div>
+            <div class="footer-desc" id="footer-desc">Dược liệu đông y chất lượng cao</div>
+          </div>
+        </div>
+        <div class="footer-contact">
+          <div class="footer-contact-item">📞 <a href="tel:0852563386" id="footer-phone">0852 563 386</a></div>
+          <div class="footer-contact-item">📍 <span id="footer-address">Đông Triều, Quảng Ninh</span></div>
+        </div>
+        <div class="footer-links">
+          <a href="#products-section">Sản phẩm</a>
+          <a href="#contact-section">Liên hệ</a>
+          <a href="admin.html">⚙️ Quản trị</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p>© 2025 HTX Vùng Dược Liệu Quảng Ninh · Thiết kế với 💚</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== CART PANEL ====== -->
+  <div class="cart-backdrop" id="cart-backdrop"></div>
+  <aside class="cart-panel" id="cart-panel">
+    <div class="cart-header">
+      <div class="cart-header-title">
+        <span>🛒</span>
+        <h2>Giỏ hàng</h2>
+      </div>
+      <button class="cart-close" id="cart-close">✕</button>
+    </div>
+    <div class="cart-body" id="cart-body">
+      <div class="empty-state" id="cart-empty">
+        <div class="empty-icon">🛒</div>
+        <p>Giỏ hàng trống<br/><small>Thêm sản phẩm để đặt hàng</small></p>
+      </div>
+      <ul class="cart-list" id="cart-list"></ul>
+
+      <!-- ====== FORM THÔNG TIN GIAO HÀNG ====== -->
+      <div class="delivery-form" id="delivery-form" style="display:none">
+        <div class="delivery-form-title">📦 Thông tin nhận hàng</div>
+
+        <div class="dform-row">
+          <label class="dform-label">Họ và tên <span class="req">*</span></label>
+          <input type="text" id="d-name" class="dform-input" placeholder="VD: Nguyễn Thị Lan" autocomplete="name" />
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Số điện thoại <span class="req">*</span></label>
+          <input type="tel" id="d-phone" class="dform-input" placeholder="VD: 0912 345 678" autocomplete="tel" />
+        </div>
+
+        <div class="dform-addr-note">
+          📌 Vui lòng nhập theo <strong>địa danh cũ trước sáp nhập</strong><br/>
+          VD: <em>Thôn Triều Hải, xã Bình Khê, huyện Đông Triều, tỉnh Quảng Ninh</em>
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Tỉnh / Thành phố <span class="req">*</span></label>
+          <input type="text" id="d-province" class="dform-input"
+            placeholder="VD: Quảng Ninh, Hà Nội, TP. Hồ Chí Minh..."
+            list="province-list" autocomplete="off" />
+          <datalist id="province-list"></datalist>
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Quận / Huyện <span class="req">*</span></label>
+          <input type="text" id="d-district" class="dform-input"
+            placeholder="VD: Huyện Đông Triều, Quận Hoàng Mai..." autocomplete="off" />
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Xã / Phường / Thị trấn</label>
+          <input type="text" id="d-commune" class="dform-input"
+            placeholder="VD: Xã Bình Khê, Phường Mạo Khê..." autocomplete="off" />
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Địa chỉ chi tiết <span class="req">*</span></label>
+          <input type="text" id="d-detail" class="dform-input" placeholder="Số nhà, thôn, xóm, đường..." />
+        </div>
+
+        <div class="dform-row">
+          <label class="dform-label">Ghi chú đơn hàng</label>
+          <textarea id="d-note" class="dform-input dform-textarea" placeholder="Thời gian nhận hàng, yêu cầu đặc biệt..." rows="2"></textarea>
+        </div>
+      </div>
+    </div>
+    <div class="cart-footer" id="cart-footer" style="display:none">
+      <div class="cart-total">
+        <span>Tổng cộng</span>
+        <strong class="price" id="cart-total-price">0 đ</strong>
+      </div>
+      <p class="cart-note">* Giá tham khảo, vui lòng liên hệ xác nhận</p>
+      <div class="cart-actions">
+        <button class="btn-cart-clear" id="cart-clear-btn">🗑 Xóa tất cả</button>
+        <button class="btn-primary cart-order-btn" id="cart-order-website" style="display:none">📤 Đặt hàng ngay</button>
+        <button class="btn-messenger cart-order-btn" id="cart-order-messenger" style="display:none">📘 Messenger</button>
+        <button class="btn-zalo cart-order-btn" id="cart-order-zalo" style="display:none">💬 Zalo</button>
+        <button class="btn-copy cart-order-btn" id="cart-order-copy">📋 Sao chép đơn</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ====== PRODUCT MODAL ====== -->
+  <div class="modal-backdrop" id="product-modal-backdrop"></div>
+  <div class="product-modal" id="product-modal" role="dialog" aria-modal="true" style="display:none">
+    <button class="modal-close" id="modal-close">✕</button>
+    <div class="modal-image-wrap">
+      <img class="modal-image" id="modal-image" src="" alt="" style="display:none" />
+      <div class="modal-image-placeholder" id="modal-image-placeholder">🌿</div>
+    </div>
+    <div class="modal-body">
+      <div class="modal-category" id="modal-category"></div>
+      <h2 class="modal-name" id="modal-name"></h2>
+      <div class="modal-price-row">
+        <span class="price modal-price" id="modal-price"></span>
+        <span class="modal-unit" id="modal-unit"></span>
+      </div>
+      <div class="modal-desc" id="modal-desc"></div>
+      <div class="modal-actions">
+        <div class="qty-wrapper">
+          <button class="qty-btn" id="modal-qty-minus">−</button>
+          <input type="number" class="qty-input" id="modal-qty" value="1" min="1" max="99" />
+          <button class="qty-btn" id="modal-qty-plus">+</button>
+        </div>
+        <button class="btn-primary modal-add-cart" id="modal-add-cart">🛒 Thêm vào giỏ</button>
+      </div>
+      <div class="modal-contact-btns" id="modal-contact-btns"></div>
+    </div>
+  </div>
+
+  <!-- ====== TOAST ====== -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/vn-address.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
