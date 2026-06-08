@@ -11,7 +11,7 @@
      CONFIG — URL API quản lý đơn hàng
      Đổi thành URL Vercel production khi deploy
   ==================================================== */
-  var CLINIC_API = 'https://htxvungduoclieu.vercel.app/api/orders/website';
+  var CLINIC_API = 'https://htxvungduoclieuqn.vercel.app/api/orders/website';
 
   var state = {
     products: [], categories: [], shopInfo: {},
