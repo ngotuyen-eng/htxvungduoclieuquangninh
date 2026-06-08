@@ -478,6 +478,52 @@
     // FAB cart button
     var fab=el('fab-cart-btn'); if(fab) fab.addEventListener('click',openCart);
 
+    // FAB search button + overlay
+    var fabSrch = el('fab-search-btn');
+    var srchOverlay = el('fab-search-overlay');
+    var fabSrchInput = el('fab-search-input');
+    var fabSrchClear = el('fab-search-clear');
+    var fabSrchClose = el('fab-search-close');
+
+    function openFabSearch() {
+      if (!srchOverlay) return;
+      srchOverlay.classList.add('open');
+      if (fabSrchInput) {
+        fabSrchInput.value = state.searchQuery || '';
+        setTimeout(function(){ fabSrchInput.focus(); }, 120);
+      }
+    }
+    function closeFabSearch() {
+      if (srchOverlay) srchOverlay.classList.remove('open');
+    }
+
+    if (fabSrch) fabSrch.addEventListener('click', openFabSearch);
+    if (fabSrchClose) fabSrchClose.addEventListener('click', closeFabSearch);
+
+    if (fabSrchInput) fabSrchInput.addEventListener('input', function() {
+      var q = this.value.trim();
+      state.searchQuery = q;
+      if (fabSrchClear) fabSrchClear.style.display = q ? 'flex' : 'none';
+      // Đồng bộ inline search
+      var isi2 = el('inline-search-input');
+      if (isi2) isi2.value = this.value;
+      var isc2 = el('inline-search-clear');
+      if (isc2) isc2.style.display = q ? 'block' : 'none';
+      renderProducts();
+    });
+    if (fabSrchInput) fabSrchInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' || e.key === 'Escape') closeFabSearch();
+    });
+    if (fabSrchClear) fabSrchClear.addEventListener('click', function() {
+      if (fabSrchInput) fabSrchInput.value = '';
+      state.searchQuery = '';
+      fabSrchClear.style.display = 'none';
+      var isi2 = el('inline-search-input');
+      if (isi2) { isi2.value = ''; var isc2 = el('inline-search-clear'); if (isc2) isc2.style.display = 'none'; }
+      renderProducts();
+      if (fabSrchInput) fabSrchInput.focus();
+    });
+
     var clr=el('cart-clear-btn'); if(clr) clr.addEventListener('click',function(){if(confirm('Xóa toàn bộ giỏ hàng?')){state.cart=[];saveCart();renderCart();}});
 
     // ĐẶT HÀNG WEBSITE → gửi API

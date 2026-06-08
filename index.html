@@ -370,11 +370,33 @@
     </div>
   </div>
 
-  <!-- ====== FLOATING CART BUTTON (luôn hiện khi cuộn) ====== -->
-  <button class="fab-cart" id="fab-cart-btn" aria-label="Giỏ hàng" style="display:none">
-    🛒
-    <span class="fab-badge" id="fab-badge">0</span>
-  </button>
+  <!-- ====== FLOATING BUTTONS (FAB) ====== -->
+  <div class="fab-group">
+    <!-- Nút tìm kiếm nổi -->
+    <button class="fab-btn fab-search-btn" id="fab-search-btn" aria-label="Tìm kiếm">🔍</button>
+    <!-- Nút giỏ hàng nổi -->
+    <button class="fab-btn fab-cart" id="fab-cart-btn" aria-label="Giỏ hàng" style="display:none">
+      🛒
+      <span class="fab-badge" id="fab-badge">0</span>
+    </button>
+  </div>
+
+  <!-- ====== SEARCH OVERLAY (hiện khi bấm FAB tìm kiếm) ====== -->
+  <div class="fab-search-overlay" id="fab-search-overlay">
+    <div class="fab-search-box">
+      <span class="fab-search-icon">🔍</span>
+      <input
+        type="text"
+        id="fab-search-input"
+        class="fab-search-input"
+        placeholder="Tìm dược liệu..."
+        autocomplete="off"
+        inputmode="search"
+      />
+      <button class="fab-search-clear" id="fab-search-clear" style="display:none">✕</button>
+      <button class="fab-search-close" id="fab-search-close">×</button>
+    </div>
+  </div>
 
   <!-- ====== TOAST ====== -->
   <div class="toast-container" id="toast-container"></div>
