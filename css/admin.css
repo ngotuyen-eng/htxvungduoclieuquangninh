@@ -397,6 +397,22 @@ select.form-control { cursor: pointer; }
   border-color: rgba(229,62,62,0.2);
   background: rgba(229,62,62,0.02);
 }
+.backup-card-publish {
+  border-color: #2d5016;
+  background: linear-gradient(135deg, #f0f7e8, #e8f5d6);
+  grid-column: 1 / -1;
+}
+.btn-publish {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; padding: 14px 20px;
+  background: linear-gradient(135deg, #2d5016, #3d7a1e);
+  color: #fff; font-weight: 700; font-size: 1rem;
+  border-radius: 12px; border: none; cursor: pointer;
+  box-shadow: 0 4px 14px rgba(45,80,22,0.35);
+  transition: all 0.2s ease; font-family: inherit;
+}
+.btn-publish:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(45,80,22,0.45); }
+.btn-publish:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 .backup-icon { font-size: 36px; }
 .backup-card h3 { font-size: 1.0625rem; font-weight: 700; color: #1a202c; }
 .backup-card p { color: #4a5568; font-size: 0.875rem; line-height: 1.65; flex: 1; }

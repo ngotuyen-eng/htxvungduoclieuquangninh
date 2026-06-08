@@ -407,6 +407,110 @@
     }
   }
 
+  /* ====================================================
+     PUBLISH — Đăng dữ liệu lên website qua GitHub API
+  ==================================================== */
+  function publishToWebsite() {
+    var tokenInput = document.getElementById('github-token');
+    var token = tokenInput.value.trim() || localStorage.getItem('htx_gh_token') || '';
+    if (!token) {
+      showToast('Vui lòng dán GitHub Token vào ô bên trên!', 'error');
+      tokenInput.focus();
+      return;
+    }
+    // Lưu token để dùng lại
+    localStorage.setItem('htx_gh_token', token);
+
+    var btn = document.getElementById('btn-publish');
+    var txt = document.getElementById('publish-btn-text');
+    var status = document.getElementById('publish-status');
+    btn.disabled = true;
+    txt.textContent = '⏳ Đang đăng lên website...';
+    status.textContent = 'Bước 1/3: Đang lấy thông tin file...';
+
+    var OWNER = 'ngotuyen-eng';
+    var REPO  = 'htxvungduoclieuquangninh';
+    var PATH  = 'js/live-data.js';
+    var API   = 'https://api.github.com/repos/' + OWNER + '/' + REPO + '/contents/' + PATH;
+
+    // Tạo nội dung live-data.js
+    var products   = DataManager.getProducts();
+    var categories = DataManager.getCategories();
+    var shopInfo   = DataManager.getShopInfo();
+    var publishedAt = new Date().toISOString();
+
+    var content = '/**\n'
+      + ' * live-data.js — Dữ liệu đã đăng tải\n'
+      + ' * Cập nhật: ' + new Date().toLocaleString('vi-VN') + '\n'
+      + ' * KHÔNG chỉnh sửa thủ công\n'
+      + ' */\n'
+      + '(function () {\n'
+      + '  var PUBLISHED_AT = "' + publishedAt + '";\n'
+      + '  var stored = localStorage.getItem("htx_published_version");\n'
+      + '  if (stored === PUBLISHED_AT) return; // Không cập nhật lại nếu đã là phiên bản mới nhất\n'
+      + '  localStorage.setItem("htx_published_version", PUBLISHED_AT);\n'
+      + '  localStorage.setItem("htx_duoclieu_products",   JSON.stringify(' + JSON.stringify(products)   + '));\n'
+      + '  localStorage.setItem("htx_duoclieu_categories", JSON.stringify(' + JSON.stringify(categories) + '));\n'
+      + '  localStorage.setItem("htx_duoclieu_shopinfo",   JSON.stringify(' + JSON.stringify(shopInfo)   + '));\n'
+      + '  console.log("[HTX] Đã tải dữ liệu mới nhất:", PUBLISHED_AT);\n'
+      + '})();\n';
+
+    var b64content = btoa(unescape(encodeURIComponent(content)));
+
+    // Lấy SHA file hiện tại
+    fetch(API, {
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(fileInfo) {
+      status.textContent = 'Bước 2/3: Đang ghi dữ liệu lên GitHub...';
+      var sha = fileInfo.sha || '';
+      var body = {
+        message: '🚀 Cập nhật dữ liệu sản phẩm - ' + new Date().toLocaleString('vi-VN'),
+        content: b64content
+      };
+      if (sha) body.sha = sha;
+      return fetch(API, {
+        method: 'PUT',
+        headers: {
+          'Authorization': 'token ' + token,
+          'Accept': 'application/vnd.github.v3+json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      });
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(result) {
+      if (result.content) {
+        status.textContent = 'Bước 3/3: Vercel đang deploy... (~30 giây)';
+        txt.textContent = '✅ Đăng thành công!';
+        showToast('🚀 Đã đăng lên website! Vercel sẽ cập nhật trong ~30 giây.', 'success', 6000);
+        setTimeout(function() {
+          txt.textContent = '🚀 Đăng lên website ngay';
+          status.textContent = 'Lần đăng cuối: ' + new Date().toLocaleString('vi-VN');
+          btn.disabled = false;
+        }, 5000);
+      } else {
+        throw new Error(result.message || 'Lỗi không xác định');
+      }
+    })
+    .catch(function(err) {
+      console.error('Publish error:', err);
+      txt.textContent = '🚀 Đăng lên website ngay';
+      status.textContent = '';
+      btn.disabled = false;
+      if (err.message && err.message.indexOf('Bad credentials') !== -1) {
+        showToast('❌ Token không hợp lệ! Kiểm tra lại GitHub Token.', 'error', 5000);
+      } else {
+        showToast('❌ Lỗi: ' + (err.message || 'Không kết nối được GitHub'), 'error', 5000);
+      }
+    });
+  }
+
   function resetData() {
     if (!confirm('RESET DỮ LIỆU?\n\nToàn bộ thay đổi của bạn sẽ mất!\nHệ thống sẽ khôi phục 114 sản phẩm mặc định ban đầu.')) return;
     if (!confirm('Bạn có CHẮC CHẮN không? Thao tác này không thể hoàn tác!')) return;
@@ -569,6 +673,16 @@
     document.getElementById('import-file').addEventListener('change', handleImportFile);
     document.getElementById('btn-import-confirm').addEventListener('click', confirmImport);
     document.getElementById('btn-reset').addEventListener('click', resetData);
+
+    // Publish to website
+    var publishBtn = document.getElementById('btn-publish');
+    if (publishBtn) publishBtn.addEventListener('click', publishToWebsite);
+    // Auto-load saved token
+    var savedToken = localStorage.getItem('htx_gh_token');
+    var tokenInput = document.getElementById('github-token');
+    if (savedToken && tokenInput) {
+      tokenInput.value = savedToken;
+    }
 
     // Admin search & filter
     var adminSearch = document.getElementById('admin-search');
