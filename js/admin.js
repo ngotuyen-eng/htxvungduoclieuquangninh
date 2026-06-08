@@ -393,18 +393,82 @@
     reader.readAsText(file);
   }
 
+  /* ====================================================
+     XÁC NHẬN MẬT KHẨU — bảo vệ lệnh nguy hiểm
+  ==================================================== */
+  var _pwCallback = null;
+
+  function requireAdminPassword(title, desc, callback) {
+    _pwCallback = callback;
+    var bd   = document.getElementById('pw-confirm-backdrop');
+    var modal = document.getElementById('pw-confirm-modal');
+    var inp  = document.getElementById('pw-confirm-input');
+    var err  = document.getElementById('pw-confirm-error');
+    document.getElementById('pw-confirm-title').textContent = title;
+    document.getElementById('pw-confirm-desc').textContent  = desc;
+    inp.value = ''; err.style.display = 'none';
+    bd.style.display = 'block';
+    modal.style.display = 'flex';
+    setTimeout(function() {
+      bd.classList.add('open'); modal.classList.add('open');
+      inp.focus();
+    }, 10);
+  }
+
+  function closePwConfirm() {
+    var bd = document.getElementById('pw-confirm-backdrop');
+    var modal = document.getElementById('pw-confirm-modal');
+    bd.classList.remove('open'); modal.classList.remove('open');
+    setTimeout(function() {
+      bd.style.display = 'none'; modal.style.display = 'none';
+    }, 260);
+    _pwCallback = null;
+  }
+
+  function initPwConfirmEvents() {
+    var form    = document.querySelector('#pw-confirm-modal form');
+    var inp     = document.getElementById('pw-confirm-input');
+    var err     = document.getElementById('pw-confirm-error');
+    var cancel  = document.getElementById('pw-confirm-cancel');
+    var closeBtn = document.getElementById('pw-confirm-close');
+    var bd      = document.getElementById('pw-confirm-backdrop');
+
+    [cancel, closeBtn, bd].forEach(function(el) {
+      if (el) el.addEventListener('click', closePwConfirm);
+    });
+
+    if (form) form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var info = DataManager.getShopInfo();
+      if (inp.value === info.adminPassword) {
+        closePwConfirm();
+        if (_pwCallback) _pwCallback();
+      } else {
+        err.style.display = 'block';
+        inp.value = ''; inp.focus();
+        inp.style.borderColor = '#e53e3e';
+        setTimeout(function() { inp.style.borderColor = ''; }, 1500);
+      }
+    });
+  }
+
   function confirmImport() {
     if (!importedData) return;
-    if (!confirm('XÁC NHẬN nhập dữ liệu?\n\nToàn bộ dữ liệu hiện tại sẽ bị GHI ĐÈ!')) return;
-    var result = DataManager.importData(importedData);
-    if (result.success) {
-      showToast(result.message, 'success');
-      document.getElementById('import-preview').style.display = 'none';
-      document.getElementById('import-file').value = '';
-      importedData = null;
-    } else {
-      showToast(result.message, 'error');
-    }
+    requireAdminPassword(
+      '📥 Xác nhận Nhập dữ liệu',
+      'Thao tác này sẽ GHI ĐÈ toàn bộ sản phẩm, danh mục hiện tại. Không thể hoàn tác!',
+      function() {
+        var result = DataManager.importData(importedData);
+        if (result.success) {
+          showToast(result.message, 'success');
+          document.getElementById('import-preview').style.display = 'none';
+          document.getElementById('import-file').value = '';
+          importedData = null;
+        } else {
+          showToast(result.message, 'error');
+        }
+      }
+    );
   }
 
   /* ====================================================
@@ -512,14 +576,17 @@
   }
 
   function resetData() {
-    if (!confirm('RESET DỮ LIỆU?\n\nToàn bộ thay đổi của bạn sẽ mất!\nHệ thống sẽ khôi phục 114 sản phẩm mặc định ban đầu.')) return;
-    if (!confirm('Bạn có CHẮC CHẮN không? Thao tác này không thể hoàn tác!')) return;
-    localStorage.removeItem('htx_duoclieu_products');
-    localStorage.removeItem('htx_duoclieu_categories');
-    // Keep shop info
-    DataManager.initializeData();
-    showToast('Đã reset về dữ liệu mặc định!', 'success');
-    renderProductsTable();
+    requireAdminPassword(
+      '🚨 Xác nhận RESET dữ liệu',
+      'Thao tác này sẽ XÓA TOÀN BỘ sản phẩm, danh mục bạn đã chỉnh sửa và khôi phục 114 sản phẩm mặc định ban đầu. Không thể hoàn tác!',
+      function() {
+        localStorage.removeItem('htx_duoclieu_products');
+        localStorage.removeItem('htx_duoclieu_categories');
+        DataManager.initializeData();
+        showToast('Đã reset về dữ liệu mặc định!', 'success');
+        renderProductsTable();
+      }
+    );
   }
 
   // ===== MODAL UTILITIES =====
@@ -716,6 +783,7 @@
     initLogin();
     initEvents();
     initSidebar();
+    initPwConfirmEvents();
   }
 
   if (document.readyState === 'loading') {

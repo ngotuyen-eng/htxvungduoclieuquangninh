@@ -320,6 +320,37 @@
   </div>
 
   <!-- Toast -->
+  <!-- ====== XÁC NHẬN MẬT KHẨU (cho lệnh nguy hiểm) ====== -->
+  <div class="modal-backdrop" id="pw-confirm-backdrop" style="display:none"></div>
+  <div class="admin-modal" id="pw-confirm-modal" style="display:none">
+    <div class="modal-header">
+      <h3 id="pw-confirm-title">⚠️ Xác nhận thao tác</h3>
+      <button class="modal-close" id="pw-confirm-close">✕</button>
+    </div>
+    <form style="padding:22px 24px;display:flex;flex-direction:column;gap:16px;">
+      <p id="pw-confirm-desc" style="color:#4a5568;font-size:.9rem;line-height:1.65;margin:0;"></p>
+      <div class="form-group">
+        <label style="font-size:.8125rem;font-weight:600;color:#4a5568;">
+          Nhập mật khẩu admin để xác nhận:
+        </label>
+        <input
+          type="password"
+          id="pw-confirm-input"
+          class="form-control"
+          placeholder="Mật khẩu admin..."
+          autocomplete="current-password"
+        />
+        <p id="pw-confirm-error" style="color:#e53e3e;font-size:.8rem;margin:0;display:none;">
+          ❌ Sai mật khẩu! Vui lòng thử lại.
+        </p>
+      </div>
+      <div class="form-actions">
+        <button type="button" class="btn-secondary" id="pw-confirm-cancel">Hủy</button>
+        <button type="submit" class="btn-danger" id="pw-confirm-ok">✅ Xác nhận</button>
+      </div>
+    </form>
+  </div>
+
   <div class="toast-container" id="toast-container"></div>
 
   <!-- Scripts -->
