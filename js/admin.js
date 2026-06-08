@@ -325,6 +325,7 @@
     document.getElementById('set-facebook').value = info.facebookLink || '';
     document.getElementById('set-messenger').value = info.messengerLink || '';
     document.getElementById('set-zalo').value = info.zaloLink || '';
+    document.getElementById('set-imgbb-key').value = info.imgbbApiKey || '';
     document.getElementById('set-password').value = '';
     document.getElementById('set-password-confirm').value = '';
   }
@@ -346,6 +347,7 @@
       facebookLink: document.getElementById('set-facebook').value.trim(),
       messengerLink: document.getElementById('set-messenger').value.trim(),
       zaloLink: document.getElementById('set-zalo').value.trim(),
+      imgbbApiKey: document.getElementById('set-imgbb-key').value.trim(),
       adminPassword: newPw || info.adminPassword
     };
 
@@ -484,7 +486,7 @@
     document.getElementById('product-form-cancel').addEventListener('click', function () { closeModal('product-form'); });
     document.getElementById('product-form-backdrop').addEventListener('click', function () { closeModal('product-form'); });
 
-    // Image upload
+    // Image upload — dùng ImgBB nếu có API key, ngược lại dùng base64
     var imageArea = document.getElementById('image-upload-area');
     var imageFile = document.getElementById('form-image-file');
     imageArea.addEventListener('click', function (e) {
@@ -493,13 +495,51 @@
     imageFile.addEventListener('change', function (e) {
       var file = e.target.files[0];
       if (!file) return;
-      if (file.size > 2 * 1024 * 1024) { showToast('Ảnh tối đa 2MB!', 'error'); return; }
-      var reader = new FileReader();
-      reader.onload = function (ev) {
-        document.getElementById('form-image').value = ev.target.result;
-        setImagePreview(ev.target.result);
-      };
-      reader.readAsDataURL(file);
+      if (file.size > 5 * 1024 * 1024) { showToast('Ảnh tối đa 5MB!', 'error'); return; }
+
+      var info = DataManager.getShopInfo();
+      var apiKey = info.imgbbApiKey || '';
+
+      if (apiKey) {
+        // --- UPLOAD LÊN IMGBB ---
+        showToast('⏳ Đang upload ảnh lên cloud...', 'info', 8000);
+        var reader = new FileReader();
+        reader.onload = function (ev) {
+          // Lấy phần base64 (bỏ prefix data:image/...;base64,)
+          var b64 = ev.target.result.split(',')[1];
+          var formData = new FormData();
+          formData.append('key', apiKey);
+          formData.append('image', b64);
+          fetch('https://api.imgbb.com/1/upload', {
+            method: 'POST',
+            body: formData
+          })
+          .then(function(res) { return res.json(); })
+          .then(function(data) {
+            if (data.success) {
+              var url = data.data.url;
+              document.getElementById('form-image').value = url;
+              setImagePreview(url);
+              showToast('✅ Đã upload ảnh thành công! Ảnh sẽ hiện trên mọi thiết bị.', 'success');
+            } else {
+              showToast('❌ ImgBB lỗi: ' + (data.error && data.error.message || 'Không upload được'), 'error');
+            }
+          })
+          .catch(function() {
+            showToast('❌ Không kết nối được ImgBB. Kiểm tra lại API Key!', 'error');
+          });
+        };
+        reader.readAsDataURL(file);
+      } else {
+        // --- FALLBACK: Lưu base64 local (chỉ hiện trên máy này) ---
+        var reader2 = new FileReader();
+        reader2.onload = function (ev) {
+          document.getElementById('form-image').value = ev.target.result;
+          setImagePreview(ev.target.result);
+          showToast('⚠️ Ảnh chỉ lưu trên máy này! Vào Cài đặt → Điền ImgBB API Key để ảnh hiện trên điện thoại khách.', 'error', 6000);
+        };
+        reader2.readAsDataURL(file);
+      }
     });
     document.getElementById('image-remove-btn').addEventListener('click', function (e) {
       e.stopPropagation();
