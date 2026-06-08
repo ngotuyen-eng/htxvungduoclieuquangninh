@@ -774,6 +774,49 @@ button {
   margin-bottom: var(--space-lg);
 }
 
+.product-modal .modal-desc-wrap {
+  background: var(--color-surface-alt);
+  border-left: 3px solid var(--color-primary-light);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  padding: 10px 14px;
+  margin-bottom: var(--space-md);
+}
+.product-modal .modal-desc {
+  color: var(--color-text-secondary);
+  font-size: 0.9rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.product-modal .modal-qty-section {
+  background: var(--color-surface-alt);
+  border-radius: var(--radius-md);
+  padding: 12px 16px;
+  margin-bottom: var(--space-md);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.product-modal .modal-qty-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+}
+.product-modal .modal-qty-hint {
+  font-size: 0.75rem;
+  color: var(--color-primary);
+  margin: 0;
+  font-style: italic;
+}
+
+.product-modal .modal-add-cart {
+  width: 100%;
+  padding: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: var(--space-sm);
+}
+
 .product-modal .modal-actions {
   display: flex;
   gap: var(--space-sm);

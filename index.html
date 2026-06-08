@@ -326,29 +326,55 @@
   </aside>
 
   <!-- ====== PRODUCT MODAL ====== -->
-  <div class="modal-backdrop" id="product-modal-backdrop"></div>
+  <div class="modal-backdrop" id="product-modal-backdrop" style="display:none"></div>
   <div class="product-modal" id="product-modal" role="dialog" aria-modal="true" style="display:none">
-    <button class="modal-close" id="modal-close">✕</button>
+    <button class="modal-close" id="modal-close" aria-label="Đóng">✕</button>
+
+    <!-- Ảnh sản phẩm -->
     <div class="modal-image-wrap">
       <img class="modal-image" id="modal-image" src="" alt="" style="display:none" />
-      <div class="modal-image-placeholder" id="modal-image-placeholder">🌿</div>
+      <div class="modal-image-placeholder" id="modal-image-placeholder">
+        <span style="font-size:64px;opacity:.3">🌿</span>
+      </div>
     </div>
+
+    <!-- Nội dung -->
     <div class="modal-body">
       <div class="modal-category" id="modal-category"></div>
       <h2 class="modal-name" id="modal-name"></h2>
+
       <div class="modal-price-row">
         <span class="price modal-price" id="modal-price"></span>
         <span class="modal-unit" id="modal-unit"></span>
       </div>
-      <div class="modal-desc" id="modal-desc"></div>
-      <div class="modal-actions">
+
+      <!-- Mô tả sản phẩm -->
+      <div class="modal-desc-wrap" id="modal-desc-wrap">
+        <p class="modal-desc" id="modal-desc"></p>
+      </div>
+
+      <!-- Chọn số lượng -->
+      <div class="modal-qty-section">
+        <label class="modal-qty-label" id="modal-qty-label">Số lượng:</label>
         <div class="qty-wrapper">
           <button class="qty-btn" id="modal-qty-minus">−</button>
-          <input type="number" class="qty-input" id="modal-qty" value="1" min="1" max="99" />
+          <input
+            type="number"
+            class="qty-input"
+            id="modal-qty"
+            value="0.2"
+            min="0.2"
+            max="99"
+            step="0.1"
+            inputmode="decimal"
+          />
           <button class="qty-btn" id="modal-qty-plus">+</button>
         </div>
-        <button class="btn-primary modal-add-cart" id="modal-add-cart">🛒 Thêm vào giỏ</button>
+        <p class="modal-qty-hint" id="modal-qty-hint">Tối thiểu 0.2 kg</p>
       </div>
+
+      <button class="btn-primary modal-add-cart" id="modal-add-cart">🛒 Thêm vào giỏ hàng</button>
+
       <div class="modal-contact-btns" id="modal-contact-btns"></div>
     </div>
   </div>

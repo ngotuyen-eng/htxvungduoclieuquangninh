@@ -164,23 +164,66 @@
     }).join('');
   }
 
+  /* ---- Phát hiện đơn vị kg hay không ---- */
+  function isKgUnit(unit) {
+    return /\bkg\b/i.test(unit || '');
+  }
+  function getQtyStep(unit) { return isKgUnit(unit) ? 0.1 : 1; }
+  function getQtyMin(unit)  { return isKgUnit(unit) ? 0.2 : 1; }
+  function roundQty(v, unit) {
+    if (isKgUnit(unit)) return Math.round(v * 10) / 10;
+    return Math.round(v);
+  }
+
   /* ---- Product modal ---- */
-  window.openProduct=function(id){
-    var p=DataManager.getProductById(id); if(!p) return; state.currentProductId=id;
-    var catMap={}; state.categories.forEach(function(c){catMap[c.id]=c.name;});
-    setText('modal-category',catMap[p.category]||''); setText('modal-name',p.name);
-    el('modal-price').textContent=fmt(p.price); setText('modal-unit','/ '+p.unit);
-    setText('modal-desc',p.description||''); el('modal-qty').value=1;
-    var img=el('modal-image'),ph=el('modal-image-placeholder');
-    if(p.image){img.src=p.image;img.alt=p.name;img.style.display='block';ph.style.display='none';}
-    else{img.style.display='none';ph.style.display='flex';}
-    var info=state.shopInfo;
-    var zalo=info.zaloLink||(info.phone?'https://zalo.me/'+info.phone.replace(/\s/g,''):'');
-    var html='';
-    if(info.messengerLink) html+='<a href="'+esc(info.messengerLink)+'" target="_blank" class="modal-contact-btn btn-messenger">📘 Messenger</a>';
-    if(zalo) html+='<a href="'+esc(zalo)+'" target="_blank" class="modal-contact-btn btn-zalo">💬 Zalo</a>';
-    if(info.phone) html+='<a href="tel:'+info.phone.replace(/\s/g,'')+'" class="modal-contact-btn btn-primary">📞 Gọi</a>';
-    setHtml('modal-contact-btns',html); openModal();
+  window.openProduct = function (id) {
+    var p = DataManager.getProductById(id); if (!p) return;
+    state.currentProductId = id;
+    var catMap = {}; state.categories.forEach(function (c) { catMap[c.id] = c.name; });
+
+    setText('modal-category', catMap[p.category] || '');
+    setText('modal-name', p.name);
+    el('modal-price').textContent = fmt(p.price);
+    setText('modal-unit', '/ ' + p.unit);
+
+    // Mô tả
+    var descEl = el('modal-desc'), descWrap = el('modal-desc-wrap');
+    if (descEl) descEl.textContent = p.description || '';
+    if (descWrap) descWrap.style.display = p.description ? 'block' : 'none';
+
+    // Ảnh
+    var img = el('modal-image'), ph = el('modal-image-placeholder');
+    if (p.image) {
+      img.src = p.image; img.alt = p.name;
+      img.style.display = 'block'; ph.style.display = 'none';
+    } else {
+      img.style.display = 'none'; ph.style.display = 'flex';
+    }
+
+    // Số lượng — thập phân cho kg
+    var step = getQtyStep(p.unit), minQ = getQtyMin(p.unit);
+    var qe = el('modal-qty');
+    if (qe) {
+      qe.step  = step;
+      qe.min   = minQ;
+      qe.value = minQ;
+    }
+    var hint = el('modal-qty-hint'), label = el('modal-qty-label');
+    if (hint) hint.textContent = isKgUnit(p.unit)
+      ? 'Tối thiểu ' + minQ + ' kg, có thể nhập 0.3, 0.5, 1.2... kg'
+      : 'Số lượng tối thiểu: 1';
+    if (label) label.textContent = isKgUnit(p.unit) ? 'Số lượng (kg):' : 'Số lượng:';
+
+    // Nút liên hệ
+    var info = state.shopInfo;
+    var zalo = info.zaloLink || (info.phone ? 'https://zalo.me/' + info.phone.replace(/\s/g, '') : '');
+    var html = '';
+    if (info.messengerLink) html += '<a href="' + esc(info.messengerLink) + '" target="_blank" class="modal-contact-btn btn-messenger">📘 Messenger</a>';
+    if (zalo) html += '<a href="' + esc(zalo) + '" target="_blank" class="modal-contact-btn btn-zalo">💬 Zalo</a>';
+    if (info.phone) html += '<a href="tel:' + info.phone.replace(/\s/g, '') + '" class="modal-contact-btn btn-primary">📞 Gọi</a>';
+    setHtml('modal-contact-btns', html);
+
+    openModal();
   };
 
   function openModal(){
@@ -199,16 +242,27 @@
   function loadCart(){try{state.cart=JSON.parse(localStorage.getItem('htx_cart')||'[]');}catch(e){state.cart=[];}}
   function saveCart(){localStorage.setItem('htx_cart',JSON.stringify(state.cart));}
 
-  window.addToCart=function(id){
-    var p=DataManager.getProductById(id); if(!p) return;
-    var ex=state.cart.find(function(c){return c.id===id;});
-    if(ex) ex.qty++; else state.cart.push({id:p.id,name:p.name,price:p.price,unit:p.unit,qty:1});
-    saveCart();renderCart();toast('Đã thêm: '+p.name,'success');
+  window.addToCart = function (id) {
+    var p = DataManager.getProductById(id); if (!p) return;
+    var minQ = getQtyMin(p.unit);
+    var ex = state.cart.find(function (c) { return c.id === id; });
+    if (ex) {
+      ex.qty = roundQty(ex.qty + minQ, p.unit);
+    } else {
+      state.cart.push({ id: p.id, name: p.name, price: p.price, unit: p.unit, qty: minQ });
+    }
+    saveCart(); renderCart(); toast('Đã thêm: ' + p.name, 'success');
   };
-  window.removeFromCartGlobal=function(id){state.cart=state.cart.filter(function(c){return c.id!==id;});saveCart();renderCart();};
-  window.updateCartQtyGlobal=function(id,d){
-    var item=state.cart.find(function(c){return c.id===id;}); if(!item)return;
-    item.qty=Math.max(1,item.qty+d); saveCart();renderCart();
+  window.removeFromCartGlobal = function (id) {
+    state.cart = state.cart.filter(function (c) { return c.id !== id; });
+    saveCart(); renderCart();
+  };
+  window.updateCartQtyGlobal = function (id, d) {
+    var item = state.cart.find(function (c) { return c.id === id; }); if (!item) return;
+    var step = getQtyStep(item.unit), minQ = getQtyMin(item.unit);
+    var newQty = roundQty(item.qty + d * step, item.unit);
+    if (newQty < minQ) { removeFromCartGlobal(id); return; }
+    item.qty = newQty; saveCart(); renderCart();
   };
 
   /* ---- Build order text ---- */
@@ -325,13 +379,15 @@
     if(delivForm) delivForm.style.display='block';
 
     if(listEl){listEl.innerHTML=state.cart.map(function(item){
+      var isKg = isKgUnit(item.unit);
+      var qtyDisplay = isKg ? item.qty.toFixed(1) + ' kg' : item.qty;
       return '<li class="cart-item"><div class="cart-item-info">'
         +'<div class="cart-item-name">'+esc(item.name)+'</div>'
         +'<div class="cart-item-unit">/ '+esc(item.unit)+'</div>'
         +'<div class="cart-item-price">'+fmt(item.price)+'</div></div>'
         +'<div class="cart-item-controls">'
         +'<button class="qty-btn" onclick="updateCartQtyGlobal(\''+item.id+'\',-1)">−</button>'
-        +'<span class="qty-display">'+item.qty+'</span>'
+        +'<span class="qty-display">'+qtyDisplay+'</span>'
         +'<button class="qty-btn" onclick="updateCartQtyGlobal(\''+item.id+'\',1)">+</button>'
         +'<button class="cart-remove-btn" onclick="removeFromCartGlobal(\''+item.id+'\')" title="Xóa">🗑</button>'
         +'</div></li>';
@@ -431,21 +487,42 @@
     });
 
     // Modal
-    var mc=el('modal-close'),mbd=el('product-modal-backdrop');
-    if(mc)mc.addEventListener('click',closeModal); if(mbd)mbd.addEventListener('click',closeModal);
-    var qe=el('modal-qty'),qm=el('modal-qty-minus'),qp=el('modal-qty-plus');
-    if(qm) qm.addEventListener('click',function(){if(qe) qe.value=Math.max(1,(parseInt(qe.value)||1)-1)||1;});
-    if(qp) qp.addEventListener('click',function(){if(qe) qe.value=Math.min(99,(parseInt(qe.value)||1)+1);});
-    var mac=el('modal-add-cart'); if(mac) mac.addEventListener('click',function(){
-      if(!state.currentProductId) return;
-      var qty=parseInt(el('modal-qty').value)||1;
-      var p=DataManager.getProductById(state.currentProductId); if(!p) return;
-      var ex=state.cart.find(function(c){return c.id===p.id;});
-      if(ex)ex.qty+=qty; else state.cart.push({id:p.id,name:p.name,price:p.price,unit:p.unit,qty:qty});
-      saveCart();renderCart();toast('Đã thêm '+qty+'x '+p.name,'success');closeModal();
+    var mc = el('modal-close'), mbd = el('product-modal-backdrop');
+    if (mc)  mc.addEventListener('click', closeModal);
+    if (mbd) mbd.addEventListener('click', closeModal);
+
+    var qe = el('modal-qty'), qm = el('modal-qty-minus'), qp = el('modal-qty-plus');
+    if (qm) qm.addEventListener('click', function () {
+      if (!state.currentProductId) return;
+      var p = DataManager.getProductById(state.currentProductId);
+      var step = getQtyStep(p ? p.unit : ''), minQ = getQtyMin(p ? p.unit : '');
+      var cur = parseFloat(qe.value) || minQ;
+      qe.value = Math.max(minQ, roundQty(cur - step, p ? p.unit : ''));
+    });
+    if (qp) qp.addEventListener('click', function () {
+      if (!state.currentProductId) return;
+      var p = DataManager.getProductById(state.currentProductId);
+      var step = getQtyStep(p ? p.unit : ''), minQ = getQtyMin(p ? p.unit : '');
+      var cur = parseFloat(qe.value) || minQ;
+      qe.value = Math.min(99, roundQty(cur + step, p ? p.unit : ''));
     });
 
-    document.addEventListener('keydown',function(e){if(e.key==='Escape'){closeModal();closeCart();}});
+    var mac = el('modal-add-cart');
+    if (mac) mac.addEventListener('click', function () {
+      if (!state.currentProductId) return;
+      var p = DataManager.getProductById(state.currentProductId); if (!p) return;
+      var minQ = getQtyMin(p.unit);
+      var qty = roundQty(parseFloat(qe.value) || minQ, p.unit);
+      if (qty < minQ) { toast('Số lượng tối thiểu ' + minQ + (isKgUnit(p.unit) ? ' kg' : ''), 'error'); return; }
+      var ex = state.cart.find(function (c) { return c.id === p.id; });
+      if (ex) ex.qty = roundQty(ex.qty + qty, p.unit);
+      else state.cart.push({ id: p.id, name: p.name, price: p.price, unit: p.unit, qty: qty });
+      saveCart(); renderCart();
+      toast('Đã thêm ' + (isKgUnit(p.unit) ? qty.toFixed(1) + ' kg ' : qty + 'x ') + p.name, 'success');
+      closeModal();
+    });
+
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') { closeModal(); closeCart(); } });
   }
 
   /* ---- Init ---- */
