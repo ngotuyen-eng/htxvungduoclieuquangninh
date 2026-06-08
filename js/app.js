@@ -367,7 +367,11 @@
     var totalQty=state.cart.reduce(function(s,c){return s+c.qty;},0);
     var totalPrice=state.cart.reduce(function(s,c){return s+c.price*c.qty;},0);
 
-    if(badge){badge.textContent=totalQty;badge.style.display=totalQty>0?'flex':'none';}
+    if(badge){
+      badge.textContent=Math.round(totalQty*10)/10;
+      badge.style.display=totalQty>0?'flex':'none';
+    }
+    updateFab(totalQty);
 
     if(!state.cart.length){
       if(listEl) listEl.innerHTML=''; if(emptyEl) emptyEl.style.display='flex';
@@ -404,8 +408,24 @@
   }
 
   /* ---- Cart panel ---- */
-  function openCart(){el('cart-panel').classList.add('open');el('cart-backdrop').classList.add('open');document.body.style.overflow='hidden';}
-  function closeCart(){el('cart-panel').classList.remove('open');el('cart-backdrop').classList.remove('open');document.body.style.overflow='';}
+  function openCart(){
+    el('cart-panel').classList.add('open');
+    el('cart-backdrop').classList.add('open');
+    document.body.style.overflow='hidden';
+  }
+  function closeCart(){
+    el('cart-panel').classList.remove('open');
+    el('cart-backdrop').classList.remove('open');
+    document.body.style.overflow='';
+  }
+
+  /* ---- FAB cart badge sync ---- */
+  function updateFab(totalQty) {
+    var fab = el('fab-cart-btn'), badge = el('fab-badge');
+    if (!fab) return;
+    fab.style.display = totalQty > 0 ? 'flex' : 'none';
+    if (badge) badge.textContent = totalQty;
+  }
 
   function copyText(text,msg){
     if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(function(){if(msg)toast(msg,'success');});}
@@ -454,6 +474,9 @@
     var ct=el('cart-toggle'); if(ct) ct.addEventListener('click',openCart);
     var cc=el('cart-close'); if(cc) cc.addEventListener('click',closeCart);
     var cb=el('cart-backdrop'); if(cb) cb.addEventListener('click',closeCart);
+
+    // FAB cart button
+    var fab=el('fab-cart-btn'); if(fab) fab.addEventListener('click',openCart);
 
     var clr=el('cart-clear-btn'); if(clr) clr.addEventListener('click',function(){if(confirm('Xóa toàn bộ giỏ hàng?')){state.cart=[];saveCart();renderCart();}});
 

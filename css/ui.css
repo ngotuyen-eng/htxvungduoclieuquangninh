@@ -932,3 +932,48 @@ main#products-section { padding: 40px 0 72px; }
   .cart-panel { width: 100vw; }
   .products-grid { gap: 10px; }
 }
+
+/* ----------------------------------------------------------------
+   FLOATING CART BUTTON (FAB) - hiện khi cuộn xuống có hàng trong giỏ
+   ---------------------------------------------------------------- */
+.fab-cart {
+  position: fixed;
+  bottom: 24px;
+  right: 20px;
+  z-index: 290;
+  width: 58px; height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2d5016, #3d7a1e);
+  color: #fff; font-size: 26px;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 6px 24px rgba(45, 80, 22, 0.45);
+  border: none; cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.34, 1.4, 0.64, 1);
+}
+.fab-cart:hover {
+  transform: scale(1.12);
+  box-shadow: 0 10px 32px rgba(45, 80, 22, 0.55);
+}
+.fab-cart:active { transform: scale(0.95); }
+
+.fab-badge {
+  position: absolute;
+  top: -4px; right: -4px;
+  min-width: 22px; height: 22px;
+  background: #e53e3e;
+  color: #fff; font-size: 11px; font-weight: 700;
+  border-radius: 100px; padding: 0 5px;
+  display: flex; align-items: center; justify-content: center;
+  border: 2px solid #fff;
+  box-shadow: 0 2px 6px rgba(229, 62, 62, 0.4);
+  animation: fab-pop 0.3s cubic-bezier(0.34, 1.5, 0.64, 1);
+}
+@keyframes fab-pop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
+
+/* Ẩn FAB trên desktop nếu header đang visible */
+@media (min-width: 769px) {
+  .fab-cart { width: 52px; height: 52px; font-size: 22px; bottom: 28px; right: 28px; }
+}

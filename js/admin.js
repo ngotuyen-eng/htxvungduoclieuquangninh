@@ -584,7 +584,8 @@
     });
 
     // Save product form
-    document.getElementById('product-form').addEventListener('submit', saveProduct);
+    // Save product — ch\u1ec9 d\u00f9ng button click, kh\u00f4ng d\u00f9ng form submit (tr\u00e1nh l\u01b0u 2 l\u1ea7n)
+    document.getElementById('product-form').addEventListener('submit', function(e) { e.preventDefault(); });
     document.getElementById('product-form-save').addEventListener('click', saveProduct);
     document.getElementById('product-form-close').addEventListener('click', function () { closeModal('product-form'); });
     document.getElementById('product-form-cancel').addEventListener('click', function () { closeModal('product-form'); });
