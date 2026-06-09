@@ -318,11 +318,18 @@
       customer_phone:   ci.phone,
       customer_address: ci.address,
       note:             ci.note || '',
-      items: state.cart.map(function(item){return {
-        name:     item.name+' ('+item.unit+')',
-        price:    item.price,
-        quantity: item.qty
-      };})
+      items: state.cart.map(function(item){
+        var isKg   = isKgUnit(item.unit);
+        var qtyLbl = isKg
+          ? (Math.round(item.qty * 10) / 10) + ' kg'
+          : item.qty + ' ' + item.unit;
+        var totalPrice = Math.round(item.price * item.qty);
+        return {
+          name:     item.name + ' \u00d7 ' + qtyLbl,
+          price:    totalPrice,
+          quantity: 1
+        };
+      })
     };
 
     fetch(CLINIC_API,{
