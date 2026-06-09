@@ -89,9 +89,10 @@
     if (tabEl) tabEl.style.display = 'block';
 
     switch (tab) {
-      case 'products': renderProductsTable(); break;
+      case 'products':   renderProductsTable(); break;
       case 'categories': renderCategoriesTable(); break;
-      case 'settings': loadSettings(); break;
+      case 'settings':   loadSettings(); break;
+      case 'orders':     initOrdersTab(); break;
       case 'backup': break;
     }
   }
@@ -615,6 +616,194 @@
   }
 
   // ===== SIDEBAR MOBILE =====
+  /* ====================================================
+     ĐƠN HÀNG — quản lý đơn khách đặt trên website
+  ==================================================== */
+  var _ordersData    = [];
+  var _ordersFilter  = 'all';   // all | pending | processing | shipping | completed
+  var _ordersSearch  = '';
+  var _ordersTimer   = null;
+
+  var ORDERS_API = 'https://htxvungduoclieuqn.vercel.app/api/orders/website';
+  var ORDERS_KEY = 'sb_publishable_Ro-ASN8wi-vI-gYcgqKGBw_xXrEV_O7';
+
+  var ORDER_STATUS_MAP = {
+    pending:    { label: 'Chờ xử lý', cls: 'status-pending' },
+    processing: { label: 'Đang chuẩn bị', cls: 'status-processing' },
+    shipping:   { label: 'Đang giao', cls: 'status-shipping' },
+    completed:  { label: 'Hoàn thành', cls: 'status-completed' },
+    cancelled:  { label: 'Đã hủy', cls: 'status-cancelled' }
+  };
+
+  function initOrdersTab() {
+    // Build tab HTML if not yet created
+    var content = document.getElementById('admin-content');
+    if (!document.getElementById('tab-orders')) {
+      var sec = document.createElement('section');
+      sec.className = 'admin-tab';
+      sec.id = 'tab-orders';
+      sec.innerHTML = [
+        '<div class="content-header">',
+        '  <div>',
+        '    <h2 class="content-title">📦 Đơn hàng từ website</h2>',
+        '    <p class="content-sub" id="orders-sub">Đang tải...</p>',
+        '  </div>',
+        '  <button class="btn-secondary" id="btn-orders-refresh">🔄 Tải lại</button>',
+        '</div>',
+
+        '<div class="orders-toolbar">',
+        '  <div class="orders-filters" id="orders-filters">',
+        '    <button class="filter-pill active" data-filter="all">Tất cả</button>',
+        '    <button class="filter-pill" data-filter="pending">Chờ xử lý</button>',
+        '    <button class="filter-pill" data-filter="processing">Đang chuẩn bị</button>',
+        '    <button class="filter-pill" data-filter="shipping">Đang giao</button>',
+        '    <button class="filter-pill" data-filter="completed">Hoàn thành</button>',
+        '  </div>',
+        '  <div class="orders-search-wrap">',
+        '    <input class="form-control" id="orders-search" placeholder="🔍 Tìm theo tên, SĐT..." />',
+        '  </div>',
+        '</div>',
+
+        '<div id="orders-list">',
+        '  <div class="orders-loading">⏳ Đang tải dữ liệu...</div>',
+        '</div>'
+      ].join('');
+      content.appendChild(sec);
+
+      // Events
+      document.getElementById('btn-orders-refresh').addEventListener('click', function() {
+        fetchOrders();
+      });
+      document.getElementById('orders-search').addEventListener('input', function() {
+        _ordersSearch = this.value.trim().toLowerCase();
+        renderOrdersList();
+      });
+      document.getElementById('orders-filters').addEventListener('click', function(e) {
+        var pill = e.target.closest('.filter-pill');
+        if (!pill) return;
+        _ordersFilter = pill.dataset.filter;
+        document.querySelectorAll('#orders-filters .filter-pill').forEach(function(p) {
+          p.classList.toggle('active', p.dataset.filter === _ordersFilter);
+        });
+        renderOrdersList();
+      });
+    }
+
+    document.getElementById('tab-orders').style.display = 'block';
+    fetchOrders();
+
+    // Auto-refresh mỗi 60 giây
+    clearInterval(_ordersTimer);
+    _ordersTimer = setInterval(function() {
+      if (currentTab === 'orders') fetchOrders(true);
+    }, 60000);
+  }
+
+  function fetchOrders(silent) {
+    if (!silent) {
+      var list = document.getElementById('orders-list');
+      if (list) list.innerHTML = '<div class="orders-loading">⏳ Đang tải dữ liệu...</div>';
+    }
+    fetch(ORDERS_API, {
+      method: 'GET',
+      headers: { 'x-api-key': ORDERS_KEY }
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        _ordersData = res.data || [];
+        renderOrdersList();
+        updateOrdersBadge();
+      } else {
+        showOrdersError(res.message);
+      }
+    })
+    .catch(function(err) {
+      showOrdersError('Không kết nối được. Kiểm tra mạng.');
+    });
+  }
+
+  function showOrdersError(msg) {
+    var list = document.getElementById('orders-list');
+    if (list) list.innerHTML = '<div class="orders-empty">⚠️ ' + escHtml(msg) + '</div>';
+    var sub = document.getElementById('orders-sub');
+    if (sub) sub.textContent = 'Không tải được dữ liệu';
+  }
+
+  function renderOrdersList() {
+    var filtered = _ordersData.filter(function(o) {
+      var matchStatus = _ordersFilter === 'all' || o.status === _ordersFilter;
+      var name  = ((o.customers && o.customers.full_name) || '').toLowerCase();
+      var phone = ((o.customers && o.customers.phone) || '').toLowerCase();
+      var matchSearch = !_ordersSearch ||
+        name.indexOf(_ordersSearch) >= 0 ||
+        phone.indexOf(_ordersSearch) >= 0 ||
+        String(o.order_number).indexOf(_ordersSearch) >= 0;
+      return matchStatus && matchSearch;
+    });
+
+    var sub = document.getElementById('orders-sub');
+    if (sub) sub.textContent = filtered.length + ' đơn' + (_ordersFilter !== 'all' ? ' — lọc: ' + ORDER_STATUS_MAP[_ordersFilter]?.label : '');
+
+    var list = document.getElementById('orders-list');
+    if (!list) return;
+    if (!filtered.length) {
+      list.innerHTML = '<div class="orders-empty">📢 Không có đơn nào.</div>';
+      return;
+    }
+
+    list.innerHTML = filtered.map(function(o) {
+      var cust    = o.customers || {};
+      var items   = o.order_items || [];
+      var st      = ORDER_STATUS_MAP[o.status] || { label: o.status, cls: 'status-pending' };
+      var date    = o.created_at ? new Date(o.created_at).toLocaleString('vi-VN', {
+        day:'2-digit', month:'2-digit', year:'numeric',
+        hour:'2-digit', minute:'2-digit'
+      }) : o.order_date || '';
+      var total   = Number(o.total_amount || 0).toLocaleString('vi-VN') + 'đ';
+
+      var itemsHtml = items.map(function(it) {
+        var price = Number(it.unit_price || 0).toLocaleString('vi-VN');
+        return '<li>' + escHtml(it.custom_name || '') + ' — <strong>' + price + 'đ</strong></li>';
+      }).join('');
+
+      return [
+        '<div class="order-card" id="order-' + o.id + '">',
+        '  <div class="order-card-header">',
+        '    <div class="order-meta">',
+        '      <span class="order-num">#' + String(o.order_number).padStart(4,'0') + '</span>',
+        '      <span class="order-date">' + date + '</span>',
+        '    </div>',
+        '    <span class="order-status-badge ' + st.cls + '">' + st.label + '</span>',
+        '  </div>',
+        '  <div class="order-card-body">',
+        '    <div class="order-customer">',
+        '      <span>👤 <strong>' + escHtml(cust.full_name || 'N/A') + '</strong></span>',
+        '      <span>📞 <a href="tel:' + escHtml(cust.phone||'') + '">' + escHtml(cust.phone || '') + '</a></span>',
+        '    </div>',
+        '    <details class="order-items-detail">',
+        '      <summary>📋 ' + items.length + ' sản phẩm — <strong class="order-total">' + total + '</strong></summary>',
+        '      <ul class="order-items-list">' + itemsHtml + '</ul>',
+             (o.notes ? '<p class="order-note">📝 ' + escHtml(o.notes) + '</p>' : ''),
+        '    </details>',
+        '  </div>',
+        '</div>'
+      ].join('');
+    }).join('');
+  }
+
+  function updateOrdersBadge() {
+    var pending = _ordersData.filter(function(o) { return o.status === 'pending'; }).length;
+    var badge   = document.getElementById('orders-badge');
+    if (!badge) return;
+    if (pending > 0) {
+      badge.textContent = pending;
+      badge.style.display = 'inline-flex';
+    } else {
+      badge.style.display = 'none';
+    }
+  }
+
   function initSidebar() {
     var toggle = document.getElementById('sidebar-toggle');
     var sidebar = document.getElementById('admin-sidebar');

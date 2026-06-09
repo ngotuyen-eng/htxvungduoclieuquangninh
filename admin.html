@@ -48,6 +48,10 @@
         <button class="sidebar-item" data-tab="settings" id="nav-settings">
           <span class="sidebar-icon">⚙️</span> Cài đặt shop
         </button>
+        <button class="sidebar-item" data-tab="orders" id="nav-orders">
+          <span class="sidebar-icon">📦</span> Đơn hàng
+          <span class="orders-badge" id="orders-badge" style="display:none">0</span>
+        </button>
         <button class="sidebar-item" data-tab="backup" id="nav-backup">
           <span class="sidebar-icon">💾</span> Sao lưu
         </button>
@@ -320,6 +324,9 @@
   </div>
 
   <!-- Toast -->
+  <!-- ====== TAB: ĐƠN HÀNG ===== -->
+  <!-- (rendered inside admin-content via JS) -->
+
   <!-- ====== XÁC NHẬN MẬT KHẨU (cho lệnh nguy hiểm) ====== -->
   <div class="modal-backdrop" id="pw-confirm-backdrop" style="display:none"></div>
   <div class="admin-modal" id="pw-confirm-modal" style="display:none">
