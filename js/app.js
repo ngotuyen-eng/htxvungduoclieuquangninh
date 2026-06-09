@@ -206,12 +206,12 @@
     if (qe) {
       qe.step  = step;
       qe.min   = minQ;
-      qe.value = minQ;
+      qe.value = 1;   // mặc định 1, không dùng minQ để tránh giảm sức mua
     }
     var hint = el('modal-qty-hint'), label = el('modal-qty-label');
     if (hint) hint.textContent = isKgUnit(p.unit)
-      ? 'Tối thiểu ' + minQ + ' kg, có thể nhập 0.3, 0.5, 1.2... kg'
-      : 'Số lượng tối thiểu: 1';
+      ? 'Tối thiểu 0.2 kg — có thể nhập số thập phân: 0.5, 1.2...'
+      : 'Nhập số nguyên (đơn vị)';
     if (label) label.textContent = isKgUnit(p.unit) ? 'Số lượng (kg):' : 'Số lượng:';
 
     // Nút liên hệ
