@@ -147,7 +147,19 @@
   }
 
   /* ---- Products grid ---- */
+  // Cuộn đến sản phẩm đầu tiên trong kết quả tìm kiếm
+  function scrollToFirstProduct() {
+    var grid = el('products-grid');
+    if (!grid) return;
+    var firstCard = grid.querySelector('.product-card');
+    if (!firstCard) return;
+    var headerH = (el('site-header') || {}).offsetHeight || 68;
+    var top = firstCard.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
+    window.scrollTo({ top: top, behavior: 'smooth' });
+  }
+
   function renderProducts(){
+
     var grid=el('products-grid'),empty=el('empty-state'),cnt=el('products-count'); if(!grid) return;
     var list=getFiltered(); var catMap={};
     state.categories.forEach(function(c){catMap[c.id]=c.name;});
@@ -462,6 +474,9 @@
       var hsi=el('search-input'); if(hsi) hsi.value=this.value;
       renderProducts();
     });
+    if(isi) isi.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') { e.preventDefault(); scrollToFirstProduct(); isi.blur(); }
+    });
     if(isc) isc.addEventListener('click',function(){
       isi.value=''; state.searchQuery=''; isc.style.display='none';
       var hsi=el('search-input'); if(hsi) hsi.value='';
@@ -475,6 +490,9 @@
       if(sc) sc.style.display=state.searchQuery?'block':'none';
       if(isi) isi.value=this.value;
       renderProducts();
+    });
+    if(si) si.addEventListener('keydown', function(e){
+      if(e.key === 'Enter') { e.preventDefault(); scrollToFirstProduct(); si.blur(); }
     });
     if(sc) sc.addEventListener('click',function(){si.value='';state.searchQuery='';sc.style.display='none';if(isi)isi.value='';renderProducts();si.focus();});
 
@@ -521,7 +539,8 @@
       renderProducts();
     });
     if (fabSrchInput) fabSrchInput.addEventListener('keydown', function(e) {
-      if (e.key === 'Enter' || e.key === 'Escape') closeFabSearch();
+      if (e.key === 'Enter') { closeFabSearch(); scrollToFirstProduct(); }
+      if (e.key === 'Escape') closeFabSearch();
     });
     if (fabSrchClear) fabSrchClear.addEventListener('click', function() {
       if (fabSrchInput) fabSrchInput.value = '';
