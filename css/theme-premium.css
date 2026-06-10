@@ -14,10 +14,10 @@
   --color-secondary-light:#D4B45A;
   --color-secondary-dark: #A07820;
   --color-accent:         #8B5E3C;
-  --color-bg:             #F5F0E4;
-  --color-bg-warm:        #EDE5D0;
-  --color-surface:        #FDFAF5;
-  --color-surface-alt:    #F2EBD9;
+  --color-bg:             #FAF8F2;
+  --color-bg-warm:        #F2EAD8;
+  --color-surface:        #FFFFFF;
+  --color-surface-alt:    #F5EFE3;
   --color-border:         #D8CDB8;
   --color-border-light:   #E8E0CC;
   --color-text:           #1A2415;
@@ -140,17 +140,17 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
     var(--color-primary-dark) !important;
 }
 
-/* Gradient overlay — lighter, more readable */
+/* Gradient overlay — nhẹ hơn, thấy rõ ảnh hơn */
 .hero::before {
   content: '' !important;
   position: absolute !important; inset: 0 !important;
   background: linear-gradient(
     100deg,
-    rgba(15,34,24,.88) 0%,
-    rgba(20,42,30,.78) 28%,
-    rgba(25,50,35,.55) 48%,
-    rgba(25,50,35,.18) 66%,
-    transparent 78%
+    rgba(15,34,24,.75) 0%,
+    rgba(20,42,30,.62) 28%,
+    rgba(25,50,35,.38) 48%,
+    rgba(25,50,35,.10) 66%,
+    transparent 76%
   ) !important;
   z-index: 1 !important;
   pointer-events: none !important;
@@ -456,7 +456,7 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 @media (max-width: 768px) {
   .hero {
     background:
-      linear-gradient(180deg, rgba(15,34,24,.72) 0%, rgba(15,34,24,.88) 100%),
+      linear-gradient(180deg, rgba(15,34,24,.58) 0%, rgba(15,34,24,.75) 100%),
       url('../images/hero-bg.jpg') center/cover no-repeat !important;
     min-height: 100svh !important;
     padding: 70px 0 50px !important;
@@ -484,10 +484,10 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
     --color-secondary-dark: #A07820 !important;
     --color-accent:         #8B5E3C !important;
     /* Nền sáng — giống light mode */
-    --color-bg:             #F5F0E4 !important;
-    --color-bg-warm:        #EDE5D0 !important;
-    --color-surface:        #FDFAF5 !important;
-    --color-surface-alt:    #F2EBD9 !important;
+    --color-bg:             #FAF8F2 !important;
+    --color-bg-warm:        #F2EAD8 !important;
+    --color-surface:        #FFFFFF !important;
+    --color-surface-alt:    #F5EFE3 !important;
     --color-border:         #D8CDB8 !important;
     --color-border-light:   #E8E0CC !important;
     /* Chữ tối — tương phản tốt trên nền sáng */
@@ -510,7 +510,7 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 
   /* Product cards — nền trắng ngà */
   .product-card {
-    background: #FDFAF5 !important;
+    background: #FFFFFF !important;
     border-color: #E8E0CC !important;
     color: #1A2415 !important;
   }
@@ -529,15 +529,15 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
   }
 
   /* Body bg */
-  body { background-color: #F5F0E4 !important; color: #1A2415 !important; }
+  body { background-color: #FAF8F2 !important; color: #1A2415 !important; }
 
   /* Sections */
-  .categories-bar { background: #FDFAF5 !important; }
-  .contact-section { background: #EDE5D0 !important; }
-  .search-bar input, .inline-search-input { background: #FDFAF5 !important; color: #1A2415 !important; }
+  .categories-bar { background: #FFFFFF !important; }
+  .contact-section { background: #F2EAD8 !important; }
+  .search-bar input, .inline-search-input { background: #FFFFFF !important; color: #1A2415 !important; }
 
   /* Cart */
-  .cart-panel { background: #FDFAF5 !important; }
-  .cart-item  { background: #F2EBD9 !important; border-color: #E8E0CC !important; }
-  .fab-search-overlay { background: rgba(253,250,245,.98) !important; }
+  .cart-panel { background: #FFFFFF !important; }
+  .cart-item  { background: #F5EFE3 !important; border-color: #E8E0CC !important; }
+  .fab-search-overlay { background: rgba(250,248,242,.98) !important; }
 }
