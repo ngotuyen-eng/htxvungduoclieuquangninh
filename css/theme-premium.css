@@ -423,8 +423,29 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 
 /* ── Contact section ────────────────────────────────────────*/
 .contact-section { background: var(--color-bg-warm) !important; }
-.contact-shop-name { font-family: var(--font-heading) !important; font-size: 1.625rem !important; font-weight: 700 !important; }
-.contact-action-title { font-family: var(--font-heading) !important; font-size: 1.375rem !important; font-weight: 700 !important; }
+
+/* Chữ contact — đổi từ trắng sang tối vì nền hiện là be sáng */
+.contact-info-col { color: var(--color-text) !important; }
+.contact-shop-name {
+  font-family: var(--font-heading) !important;
+  font-size: 1.625rem !important; font-weight: 700 !important;
+  color: var(--color-primary) !important;
+}
+.contact-desc { color: var(--color-text-secondary) !important; opacity: 1 !important; }
+.cd-label { color: var(--color-text-muted) !important; }
+.cd-value { color: var(--color-text) !important; font-weight: 600 !important; }
+.cd-value a { color: var(--color-primary) !important; }
+.cd-value a:hover { color: var(--color-secondary-dark) !important; }
+.cd-icon { color: var(--color-secondary-dark) !important; }
+
+.contact-action-title {
+  font-family: var(--font-heading) !important;
+  font-size: 1.375rem !important; font-weight: 700 !important;
+  color: var(--color-primary) !important;
+}
+.contact-action-sub { color: var(--color-text-secondary) !important; opacity: 1 !important; }
+.contact-note { color: var(--color-text-muted) !important; }
+.contact-note strong { color: var(--color-secondary-dark) !important; }
 
 /* ── Footer ─────────────────────────────────────────────────*/
 .footer { background: #0F2218 !important; border-top: 2px solid rgba(201,160,48,.25) !important; }
