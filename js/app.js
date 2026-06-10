@@ -157,6 +157,12 @@
     var top = firstCard.getBoundingClientRect().top + window.pageYOffset - headerH - 12;
     window.scrollTo({ top: top, behavior: 'smooth' });
   }
+  // Debounce để không scroll liên tục mỗi ký tự
+  var _scrollTimer = null;
+  function scrollToFirstProductDebounced() {
+    clearTimeout(_scrollTimer);
+    _scrollTimer = setTimeout(scrollToFirstProduct, 150);
+  }
 
   function renderProducts(){
 
@@ -470,9 +476,9 @@
     if(isi) isi.addEventListener('input',function(){
       state.searchQuery=this.value.trim();
       if(isc) isc.style.display=state.searchQuery?'block':'none';
-      // Đồng bộ header search nếu có
       var hsi=el('search-input'); if(hsi) hsi.value=this.value;
       renderProducts();
+      if(state.searchQuery) scrollToFirstProductDebounced();
     });
     if(isi) isi.addEventListener('keydown', function(e){
       if(e.key === 'Enter') { e.preventDefault(); scrollToFirstProduct(); isi.blur(); }
@@ -490,6 +496,7 @@
       if(sc) sc.style.display=state.searchQuery?'block':'none';
       if(isi) isi.value=this.value;
       renderProducts();
+      if(state.searchQuery) scrollToFirstProductDebounced();
     });
     if(si) si.addEventListener('keydown', function(e){
       if(e.key === 'Enter') { e.preventDefault(); scrollToFirstProduct(); si.blur(); }
@@ -531,12 +538,12 @@
       var q = this.value.trim();
       state.searchQuery = q;
       if (fabSrchClear) fabSrchClear.style.display = q ? 'flex' : 'none';
-      // Đồng bộ inline search
       var isi2 = el('inline-search-input');
       if (isi2) isi2.value = this.value;
       var isc2 = el('inline-search-clear');
       if (isc2) isc2.style.display = q ? 'block' : 'none';
       renderProducts();
+      if (q) scrollToFirstProductDebounced();
     });
     if (fabSrchInput) fabSrchInput.addEventListener('keydown', function(e) {
       if (e.key === 'Enter') { closeFabSearch(); scrollToFirstProduct(); }
