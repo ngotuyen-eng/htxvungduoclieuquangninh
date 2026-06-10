@@ -244,12 +244,14 @@
 
   window.addToCart = function (id) {
     var p = DataManager.getProductById(id); if (!p) return;
-    var minQ = getQtyMin(p.unit);
+    var step = getQtyStep(p.unit);
     var ex = state.cart.find(function (c) { return c.id === id; });
     if (ex) {
-      ex.qty = roundQty(ex.qty + minQ, p.unit);
+      // Đã có trong giỏ → cộng thêm 1 bước (0.1 kg hoặc 1 đơn vị)
+      ex.qty = roundQty(ex.qty + step, p.unit);
     } else {
-      state.cart.push({ id: p.id, name: p.name, price: p.price, unit: p.unit, qty: minQ });
+      // Thêm mới → mặc định 1 (không dùng minQ 0.2 để tránh giảm sức mua)
+      state.cart.push({ id: p.id, name: p.name, price: p.price, unit: p.unit, qty: 1 });
     }
     saveCart(); renderCart(); toast('Đã thêm: ' + p.name, 'success');
   };
