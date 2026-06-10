@@ -140,17 +140,17 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
     var(--color-primary-dark) !important;
 }
 
-/* Gradient overlay — dark left, transparent right */
+/* Gradient overlay — lighter, more readable */
 .hero::before {
   content: '' !important;
   position: absolute !important; inset: 0 !important;
   background: linear-gradient(
     100deg,
-    rgba(10,26,16,.97) 0%,
-    rgba(15,34,24,.93) 30%,
-    rgba(15,34,24,.80) 50%,
-    rgba(15,34,24,.30) 68%,
-    transparent 80%
+    rgba(15,34,24,.88) 0%,
+    rgba(20,42,30,.78) 28%,
+    rgba(25,50,35,.55) 48%,
+    rgba(25,50,35,.18) 66%,
+    transparent 78%
   ) !important;
   z-index: 1 !important;
   pointer-events: none !important;
@@ -170,8 +170,8 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 .hero-content {
   position: relative !important; z-index: 2 !important;
   text-align: left !important;
-  max-width: 560px !important;
-  margin-left: 0 !important;
+  max-width: 580px !important;
+  margin-left: 6% !important;
 }
 
 /* Badge */
@@ -208,12 +208,12 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 
 /* Description */
 .hero-desc {
-  font-size: .9375rem !important; font-weight: 300 !important;
+  font-size: .9375rem !important; font-weight: 400 !important;
   letter-spacing: .02em !important; line-height: 1.85 !important;
-  color: rgba(248,245,238,.80) !important;
+  color: rgba(248,245,238,.92) !important;
   margin-bottom: 1.75rem !important;
 }
-.hero-desc em { color: rgba(201,160,48,.75) !important; font-style: italic !important; }
+.hero-desc em { color: rgba(215,180,80,.88) !important; font-style: italic !important; }
 
 /* Info row */
 .hero-info-row {
@@ -456,35 +456,88 @@ h1,h2,h3,h4 { font-family: var(--font-heading); letter-spacing: .02em; }
 @media (max-width: 768px) {
   .hero {
     background:
-      linear-gradient(180deg, rgba(10,26,16,.82) 0%, rgba(10,26,16,.96) 100%),
+      linear-gradient(180deg, rgba(15,34,24,.72) 0%, rgba(15,34,24,.88) 100%),
       url('../images/hero-bg.jpg') center/cover no-repeat !important;
     min-height: 100svh !important;
     padding: 70px 0 50px !important;
   }
   .hero::before { background: none !important; }
-  .hero-content { max-width: 100% !important; text-align: center !important; margin: 0 auto !important; }
+  .hero-content { max-width: 100% !important; text-align: center !important; margin: 0 auto !important; padding: 0 16px !important; }
   .hero-info-row { justify-content: center !important; }
   .hero-cta-row { justify-content: center !important; }
   .hero-stats { margin: 0 auto 1.75rem !important; max-width: 100% !important; }
   .hero-title-gold { display: inline !important; }
 }
 
-/* ── Dark mode ──────────────────────────────────────────────*/
+/* ── Override dark mode từ style.css — giữ nền sáng ────────
+   Điện thoại bật dark mode → style.css đổi nền thành #1a1410
+   (tối đen). Block này ép lại về màu sáng để chữ luôn dễ đọc.
+   ─────────────────────────────────────────────────────────── */
 @media (prefers-color-scheme: dark) {
   :root {
-    --color-bg:            #0E1A10;
-    --color-bg-warm:       #141E16;
-    --color-surface:       #192118;
-    --color-surface-alt:   #1E2920;
-    --color-border:        #2A3C2C;
-    --color-border-light:  #223024;
-    --color-text:          #E8E0D0;
-    --color-text-secondary:#C2B8A8;
-    --color-text-muted:    #8A8070;
+    --color-primary:        #1B3828 !important;
+    --color-primary-light:  #2A5040 !important;
+    --color-primary-dark:   #0F2218 !important;
+    --color-primary-bg:     #E8EFE9 !important;
+    --color-secondary:      #C9A030 !important;
+    --color-secondary-light:#D4B45A !important;
+    --color-secondary-dark: #A07820 !important;
+    --color-accent:         #8B5E3C !important;
+    /* Nền sáng — giống light mode */
+    --color-bg:             #F5F0E4 !important;
+    --color-bg-warm:        #EDE5D0 !important;
+    --color-surface:        #FDFAF5 !important;
+    --color-surface-alt:    #F2EBD9 !important;
+    --color-border:         #D8CDB8 !important;
+    --color-border-light:   #E8E0CC !important;
+    /* Chữ tối — tương phản tốt trên nền sáng */
+    --color-text:           #1A2415 !important;
+    --color-text-secondary: #4A3C28 !important;
+    --color-text-muted:     #8A7A60 !important;
+    --color-text-inverse:   #F8F5EE !important;
+    /* Shadows nhẹ */
+    --shadow-sm:  0 2px 8px rgba(15,34,24,.08) !important;
+    --shadow-md:  0 4px 20px rgba(15,34,24,.10) !important;
+    --shadow-lg:  0 8px 40px rgba(15,34,24,.13) !important;
+    --shadow-card-hover: 0 10px 40px rgba(15,34,24,.14) !important;
   }
-  .header { background: rgba(25,33,24,.98) !important; }
-  .category-pill { background: var(--color-surface) !important; border-color: var(--color-border) !important; }
-  .product-card { background: var(--color-surface) !important; border-color: var(--color-border) !important; }
-  .cart-panel, .fab-search-overlay { background: var(--color-surface) !important; }
-  .footer { background: #080F09 !important; }
+
+  /* Header vẫn sáng */
+  .header {
+    background: rgba(253,250,245,.97) !important;
+    border-bottom-color: #E8E0CC !important;
+  }
+
+  /* Product cards — nền trắng ngà */
+  .product-card {
+    background: #FDFAF5 !important;
+    border-color: #E8E0CC !important;
+    color: #1A2415 !important;
+  }
+  .product-card .card-title  { color: #1A2415 !important; }
+  .product-card .card-category { color: #A07820 !important; }
+
+  /* Category pills */
+  .category-pill {
+    background: #FDFAF5 !important;
+    border-color: #D8CDB8 !important;
+    color: #4A3C28 !important;
+  }
+  .category-pill.active {
+    background: #1B3828 !important;
+    color: #F8F5EE !important;
+  }
+
+  /* Body bg */
+  body { background-color: #F5F0E4 !important; color: #1A2415 !important; }
+
+  /* Sections */
+  .categories-bar { background: #FDFAF5 !important; }
+  .contact-section { background: #EDE5D0 !important; }
+  .search-bar input, .inline-search-input { background: #FDFAF5 !important; color: #1A2415 !important; }
+
+  /* Cart */
+  .cart-panel { background: #FDFAF5 !important; }
+  .cart-item  { background: #F2EBD9 !important; border-color: #E8E0CC !important; }
+  .fab-search-overlay { background: rgba(253,250,245,.98) !important; }
 }
